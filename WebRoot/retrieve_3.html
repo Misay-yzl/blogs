@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>密码找回</title>
+<!-- Custom Theme files -->
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all"/>
+<!-- Custom Theme files -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+</head>
+<style>
+	.forgot input:last-child{
+		width:350px;
+	}
+</style>
+<body>
+<div class="login">
+	<h2>密码找回第三步</h2>
+	<div class="login-top">
+		<h1>请输入您的新密码:</h1>
+		<form>
+			<input type="password" placeholder="密码" name="pwd">
+			<input type="password" placeholder="确定密码" name="rpwd">
+	    </form>
+	    <a id="error"></a>
+	    <div class="forgot">
+	    	<input type="submit" value="确定" id="queding">
+	    </div>
+	</div>
+	<div class="login-bottom">
+		<h3>联系QQ:1848484862</h3>
+	</div>
+</div>	
+<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$("#queding").click(function(){
+			var pwd=$("input[name='pwd']").val();
+			var rpwd=$("input[name='rpwd']").val();
+			var regpwd=/^\w{6,20}$/;
+			if(pwd.length>16){
+				$("#error").text("密码最高16位");
+				return;
+			}
+			if(pwd.length<6){
+				$("#error").text("密码不少于6位");
+				return;
+			}
+			if(pwd!=rpwd){
+				$("#error").text("两次密码不一致");
+				return;
+			}
+			var thisURL = document.URL;  
+  			var getval =thisURL.split('?')[1];
+  			var author= getval.split("=")[1];
+			var str="pwd="+pwd+"&author="+author;
+			$.get("updatepwd",str,function(data){
+				if(data="true"){
+					$("#error").text("");
+					alert("修改成功!")
+					window.location.href="login.html";
+				}else{
+					$("#error").text("修改失败");
+				}
+			})
+		})
+	})
+</script>
+
+</body>
+</html>

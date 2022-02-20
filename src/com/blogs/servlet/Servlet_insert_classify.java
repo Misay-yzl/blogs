@@ -1,0 +1,29 @@
+package com.blogs.servlet;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.blogs.service.Blogs_article_classifyService;
+import com.blogs.service.imp.Blogs_article_classifyServiceImp;
+@WebServlet("/add_classify")
+public class Servlet_insert_classify extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String classify=req.getParameter("fenlei");
+		Blogs_article_classifyService barcs=new Blogs_article_classifyServiceImp();
+		barcs.insert_classify(classify);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		this.doGet(req, resp);
+	}
+	
+}

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>密码找回</title>
+<!-- Custom Theme files -->
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all"/>
+<!-- Custom Theme files -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+</head>
+<style>
+	.forgot1{
+		//width:100px;
+	}
+	.forgot input:first-child{
+		width:100px;
+		 float:right;
+		 margin-top:-55px;
+		 
+	}
+	.forgot input:last-child{
+		width:450px;
+	}
+	.login-top form input:last-child{
+		width:180px;
+	}
+	#OK{
+		 width:350px;
+	}
+</style>
+<body>
+<div class="login">
+	<h2>密码找回第二步</h2>
+	<div class="login-top">
+		<h1>请输入您绑定的邮箱号:</h1>
+		<form>
+			<input type="text" placeholder="邮箱" name="email">
+			<input type="text" placeholder="请输入验证码" name="yzm">
+			
+	    </form>
+	    <a id="error"></a>
+		<div class="forgot">
+			<input type="submit" value="获取验证码" id="sendcode">
+	    	<input type="submit" value="确定" id="OK">
+	    	<span hidden id="yanzhengma"></span>
+	    </div>
+		
+	</div>
+	<div class="login-bottom">
+		<h3>联系QQ:1848484862</h3>
+	</div>
+</div>	
+<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+<script type="text/javascript">
+	$(function(){
+	
+		$("#sendcode").click(function(){
+			var email=$("input[name='email']").val();
+			var regemail=/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/;
+			if(!regemail.test(email)){
+				$("#error").text("邮箱格式不正确");
+				return;
+			}
+			var thisURL = document.URL;  
+  			var  getval =thisURL.split('?')[1];
+  			var author= getval.split("=")[1];
+			var str="email="+email+"&author="+author;
+			$.get("Selectemail",str,function(data){
+				if(data=="false"){
+					$("#error").text("邮箱错误!");
+					return;
+				}else{
+					$("#error").text("");
+					$("#sendcode").css({"background-color":"#818181"});
+					var str2="email="+email+"&flag=1"
+					$.get("Sendcode",str2,function(data1){
+						$("#yanzhengma").text(data1);
+					})
+					var count = 60;
+		            var countdown = setInterval(CountDown, 1000);
+		            function CountDown() {
+			             $("#sendcode").attr("disabled", true);
+			             $("#sendcode").val(count + "S");
+			             if (count == 0) {
+			                 $("#sendcode").val("获取验证码").removeAttr("disabled");
+			                 $("#sendcode").css({"background-color":"#F45B4B"});
+			                 clearInterval(countdown);
+			             }
+	             	count--;
+            	}
+				
+				}
+			})
+		})
+		
+		$("#OK").click(function(){
+			var yzm=$("input[name='yzm']").val();
+			var yanzhengma=$("#yanzhengma").text();
+			//alert(yzm+yanzhengma);
+			if(yzm==""||yzm!=yanzhengma){
+				$("#error").text("验证码不正确!");
+				return;
+			}
+			$("#error").text("");
+			var thisURL = document.URL;  
+  			var  getval =thisURL.split('?')[1];
+  			var author= getval.split("=")[1];
+			window.location.href="retrieve_3.html?author="+author;
+		})
+	})
+	
+</script>
+
+</body>
+</html>

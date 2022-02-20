@@ -1,0 +1,162 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>博客注册</title>
+<!-- Custom Theme files -->
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all"/>
+<!-- Custom Theme files -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+</head>
+<style>
+	.forgot input:first-child{
+		width:100px;
+		 float:right;
+		 margin-top:-55px; 
+	}
+	.login-top form input:last-child{
+		width:180px;
+	}
+	#queding{
+		 width:350px;
+	}
+</style>
+<body>
+<div class="login">
+	<h2>博客注册 </h2>
+	<div class="login-top">
+		<h1>注册</h1>
+		<form action="" method="post">
+			<input type="text" placeholder="用户名" name="name">
+			<input type="password" placeholder="密码" name="pwd">
+			<input type="password" placeholder="确定密码" name="rpwd">
+			<input type="text" placeholder="邮箱"  name="email">
+			<input type="text" placeholder="验证码"  name="code">
+	    </form>
+	    <a id="error"></a>
+	    <div class="forgot">
+	    	<input type="submit" value="获取验证码" id="sendcode">
+			<a href="login.html">登录</a>
+	    	<input type="submit" value="确定" id="queding">
+	    	<span hidden id="yanzhengma"></span>
+	    </div>
+	</div>
+	<div class="login-bottom">
+		<h3>联系QQ:1848484862</h3>
+	</div>
+</div>	
+<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$("#sendcode").click(function(){
+			var email=$("input[name='email']").val();
+			var regemail=/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/;
+			if(!regemail.test(email)){
+				$("#error").text("邮箱格式不正确!");
+				return;
+			}
+			$.get("Selectemail","email="+email,function(data){
+				if(data=="true"){
+					$("#error").text("邮箱已存在!");
+					return;
+				}else{
+					$("#error").text("");
+					$("#sendcode").css({"background-color":"#818181"});
+					$.get("Sendcode","email="+email,function(data1){
+					//alert(data1);
+						$("#yanzhengma").text(data1);
+					})
+					var count = 60;
+		            var countdown = setInterval(CountDown, 1000);
+		            function CountDown() {
+			             $("#sendcode").attr("disabled", true);
+			             $("#sendcode").val(count + "S");
+			             if (count == 0) {
+			                 $("#sendcode").val("获取验证码").removeAttr("disabled");
+			                 $("#sendcode").css({"background-color":"#F45B4B"});
+			                 clearInterval(countdown);
+			             }
+	             	count--;
+            		}
+				
+				}
+			})
+		})
+		$("#queding").click(function(){
+			var name=$("input[name='name']").val();
+			var pwd=$("input[name='pwd']").val();
+			var rpwd=$("input[name='rpwd']").val();
+			var email=$("input[name='email']").val();
+			var code=$("input[name='code']").val();
+			var str="";
+			//var regname=/^\w{3,10}$/;
+			/* if(!regname.test(name)){
+				$("#error").text("用户名不少于3位");
+				return;
+			} */
+			if(name.length<=2){
+                $("#error").text("用户名不少于3位");
+				return;
+            }
+            if(name.length>8){
+                $("#error").text("用户名最高8位");
+				return;
+            }
+			var regpwd=/^\w{6,16}$/;
+			if(pwd.length>16){
+				$("#error").text("密码名最高16位");
+				return;
+			}
+			if(pwd.length<6){
+				$("#error").text("密码名不少于6位");
+				return;
+			}
+			if(pwd!=rpwd){
+				$("#error").text("两次密码不一致");
+				return;
+			}
+			var regemail=/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/;
+			if(!regemail.test(email)){
+				$("#error").text("邮箱格式不正确");
+				return;
+			}
+			var panduan=$("#yanzhengma").text();
+			if(code==""||code!=panduan){
+				$("#error").text("验证码不正确");
+				return;
+			}  
+			$.get("Selectauthor","author="+name,function(data){
+				//alert(data);
+				if(data=="true"){
+					$("#error").text("用户名已存在!");
+					return;
+				}else{
+					$.get("Selectemail","email="+email,function(data1){
+						//alert(data1);
+						if(data1=="true"){
+							$("#error").text("邮箱已存在!");
+							return;
+						}else{
+							$("#error").text("");
+							var str="author="+name+"&pwd="+pwd+"&email="+email
+							$.get("inserUser",str,function(flag){
+								if(flag){
+									alert("注册成功!");
+									window.location.href="login.html";
+								}else{
+									alert("注册失败!");
+								}
+							})
+						}
+					})
+				
+				}
+			})
+
+		})
+	})
+</script>
+
+</body>
+</html>

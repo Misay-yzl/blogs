@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>登录</title>
+<!-- Custom Theme files -->
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all"/>
+<!-- Custom Theme files -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+</head>
+<style>
+
+</style>
+<body>
+
+<div class="login">
+ 	<h2>博客登录 </h2>
+	<div class="login-top">
+		<h1>登录</h1>
+		<form action="SelectBlogs_anthor" method="post" id="form_first">
+			<input type="text" placeholder="用户名" name="author">
+			<input type="password" placeholder="密码" name="pwd">
+	    </form>
+	    	<a id="error"></a>
+	    <div class="forgot">
+	    	<a href="retrieve_1.html">忘记密码？</a>
+			<a href="register.html">注册</a>
+	    	<input type="submit" value="登录" id="denglu">
+	    </div>
+	</div>
+	<div class="login-bottom">
+		<h3>联系QQ:1848484862</h3>
+	</div>
+</div>	
+<script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$("#denglu").click(function(){
+			var name=$("input[name='author']").val()
+			var pwd=$("input[name='pwd']").val()
+			if(name==""){
+				$("#error").text("请输入账号!")
+				return;
+			}
+			if(pwd==""){
+				$("#error").text("请输入密码!")
+				return;
+			}
+			var str="author="+name+"&pwd="+pwd
+			$.post("SelectBlogs_anthor",str,function(data1){
+				if(data1!="false"){
+			 		var thisurl="http://"+window.location.host;
+			 		var xiangmu=window.location.pathname;
+			 		xiangmu=xiangmu.substr(0, xiangmu.lastIndexOf("/"))		
+			 		thisurl=thisurl+xiangmu;
+			 		var url=document.referrer;
+			 		var shu=url.lastIndexOf(".")+5-thisurl.length;
+			 		var a=url.substr(thisurl.length+1,shu-1);
+					if(a=="register.html"||a=="retrieve_3.html"){
+						location.replace("index.jsp");	
+					}else{
+						location.replace(document.referrer);
+					}
+				}else{
+					$("#error").text("账号或密码错误!")
+				}
+			});
+		})
+		
+	})
+</script>
+
+</body>
+</html>
